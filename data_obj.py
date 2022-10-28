@@ -51,10 +51,10 @@ class DataObj:
         self.load_dic(orjson.loads(strb))
         print(self.__dict__.keys())
 
-    def check_numpy(self, item):
+    def check_list(self, item):
         if type(item) is list:
-            self.check_numpy(item[0])
-        if type(item) is np.ndarray:
+            return self.check_list(item[0])
+        if (type(item) is float) or (type(item) is int):
             return True
         else:
             return False
@@ -66,9 +66,9 @@ class DataObj:
             # handle numpy arrays
             # does not working with multi-dimensional numpy arrays yet. 
             # need recursive check function so that lists of lists of numpy becomes np.array(np.array(np.array))
-            if type(dic[key]) is list:
-                if (type(dic[key][0]) is float) or (type(dic[key][0]) is int) or self.check_numpy(dic[key]):
-                    dic_2[key] = np.array(dic[key])
+            if self.check_list(dic[key]):
+                dic_2[key] = np.array(dic[key])
+                # if (type(dic[key][0]) is float) or (type(dic[key][0]) is int) or self.check_list(dic[key]):
 
             # handle lists of objects of type JsonTool
             if (type(dic[key]) is list) and (key[-3:] == "_do"):
@@ -131,32 +131,42 @@ if __name__ == "__main__":
     # and an extra numpy array.
     parent = DataObj()
     parent.items = []
-    for i in range(20):
-        struct = DataObj()
-        struct.item = "this is an item"
-        struct.dB = f"{i} dB"
-        struct.ls = [
-            np.array([3, 34, 2, 43]),
-            np.array([3, 34, 2, 43]),
-            np.array([3, 34, 2, 43]),
-        ]
-        struct.arr = np.array([23, 2, 34, 2, 43, 3, 4.433])
-        parent.items.append(struct)
-    parent.extraObj = DataObj()
-    parent.extraObj.item = "this is an item inside an nested DataObj"
-    parent.numpy = np.array([3, 54, 3, 45, 2, 5, 7, 3])
-    # export
-    parent.export("try_this.json")
+    # for i in range(20):
+    #     struct = DataObj()
+    #     struct.item = "this is an item"
+    #     struct.dB = f"{i} dB"
+    #     struct.ls = [
+    #         np.array([3, 34, 2, 43]),
+    #         np.array([3, 34, 2, 43]),
+    #         np.array([3, 34, 2, 43]),
+    #     ]
+    #     struct.arr = np.array([23, 2, 34, 2, 43, 3, 4.433])
+    #     parent.items.append(struct)
+    # parent.extraObj = DataObj()
+    # parent.extraObj.item = "this is an item inside an nested DataObj"
+    # parent.numpy = np.array([3, 54, 3, 45, 2, 5, 7, 3])
+    # # export
+    # parent.export("try_this.json")
 
-    # import
+    # # import
+    # parent_2 = DataObj("try_this.json")
+    # print(type(parent_2))
+    # for item in parent_2.__dict__.keys():
+    #     print(item)
+    # print(parent_2.extraObj.item)
+    # print()
+    # print(parent_2.numpy)
+    # print(type(parent_2.numpy))
+    # print()
+    # print([parent_2.items[i].dB for i in range(10)])
+    # print([parent_2.items[i].arr for i in range(10)])
+    parent.items.append([np.array([4,5,23,45,3,4]),np.array([4,5,23,45,3,4]),np.array([55,5,23,45,3,4])])
+    parent.export("try_this.json")
+    print()
     parent_2 = DataObj("try_this.json")
-    print(type(parent_2))
-    for item in parent_2.__dict__.keys():
-        print(item)
-    print(parent_2.extraObj.item)
-    print()
-    print(parent_2.numpy)
-    print(type(parent_2.numpy))
-    print()
-    print([parent_2.items[i].dB for i in range(10)])
-    print([parent_2.items[i].arr for i in range(10)])
+    print(parent_2.items)
+    print(type(parent_2.items))
+    # print(parent.check_numpy(parent.items))
+
+
+
