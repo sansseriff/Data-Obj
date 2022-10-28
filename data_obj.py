@@ -51,14 +51,23 @@ class DataObj:
         self.load_dic(orjson.loads(strb))
         print(self.__dict__.keys())
 
+    def check_numpy(self, item):
+        if type(item) is list:
+            self.check_numpy(item[0])
+        if type(item) is np.ndarray:
+            return True
+        else:
+            return False
+
     def load_dic(self, dic):
 
         dic_2 = dic.copy()
         for key in dic.keys():
             # handle numpy arrays
-            # does not working with multi-dimensional numpy arrays yet. need recursive check function
+            # does not working with multi-dimensional numpy arrays yet. 
+            # need recursive check function so that lists of lists of numpy becomes np.array(np.array(np.array))
             if type(dic[key]) is list:
-                if (type(dic[key][0]) is float) or (type(dic[key][0]) is int):
+                if (type(dic[key][0]) is float) or (type(dic[key][0]) is int) or self.check_numpy(dic[key]):
                     dic_2[key] = np.array(dic[key])
 
             # handle lists of objects of type JsonTool
