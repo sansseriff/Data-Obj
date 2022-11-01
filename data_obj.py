@@ -70,7 +70,6 @@ class DataObj:
             # need recursive check function so that lists of lists of numpy becomes np.array(np.array(np.array))
             if self.check_list(dic[key]):
                 dic_2[key] = np.array(dic[key])
-                # if (type(dic[key][0]) is float) or (type(dic[key][0]) is int) or self.check_list(dic[key]):
 
             # handle lists of objects of type JsonTool
             if (type(dic[key]) is list) and (key[-3:] == "_do"):
