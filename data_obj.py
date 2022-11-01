@@ -51,6 +51,8 @@ class DataObj:
         self.load_dic(orjson.loads(strb))
         print(self.__dict__.keys())
 
+
+    # recursive
     def check_list(self, item):
         if type(item) is list:
             return self.check_list(item[0])
